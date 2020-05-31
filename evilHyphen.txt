@@ -1,0 +1,103 @@
+#include <iostream>
+#include <conio2.h>
+#include<ctime>
+#include <Windows.h> 
+
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	
+	int pos=0;
+	bool play=true;
+	char tecla=' ';
+	bool empezar=false;
+	
+	float delay=0;
+	clock_t t1, t2, tiempo;
+	t1=0;
+	t2=0;
+	int velocidad;
+	
+	do {
+		cout<<"Ajusta la velocidad de escritura (1-10. Recomendable: mayor a 4): ";
+		cin>>velocidad;
+		
+	} while(velocidad<1 || velocidad>10);
+
+	delay=velocidad/10.0f;
+	tiempo=CLOCKS_PER_SEC*delay;
+	
+	system("cls");
+
+	string texto="";	
+	string textoAux="";
+	
+	string textoLast="";
+	string textoAuxLast="";
+	
+	cout<<"Verba volant, scripta manent??..."<<endl;
+	cout<<"* * * * * * * * * * * * * * * * * * * * * * * "<<endl;
+	cout<<endl;
+	
+	t1=clock();
+
+	while (play){	
+		
+		if (kbhit()){
+			
+			empezar=true;
+			tecla=getch();
+			
+			switch (tecla){
+				
+			case '\b': 
+				play=false;
+				break;
+
+			case 13:
+				texto+='\n';
+				break;
+				
+			default: 
+				texto+=tecla;
+				break;
+			}			
+		}
+				
+		t2=clock();
+		
+		if ((t2-t1)>tiempo && empezar){
+			
+			if (texto.at(pos)!='\n'){
+		
+				textoAux=texto;
+				
+				texto.replace(pos,1," ");
+				
+				if (texto.length()>3){
+					
+					textoLast=texto.substr(texto.length()-3);
+					textoAuxLast=textoAux.substr(textoAux.length()-3);
+					
+					if (textoLast!=textoAuxLast){
+		    
+						play=false;
+					}
+				}
+			}
+			
+			pos++;			
+			t1=t2;				
+		}
+	
+		gotoxy(1,4);
+		cout<<texto;
+	}
+	
+
+	cout<<endl;
+	cout<<"* * * * * * * * * * * * * * * * * * * * * * * "<<endl;
+	cout<<"!(scripta manent)";
+		
+	return 0;
+}
